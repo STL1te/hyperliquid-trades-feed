@@ -59,6 +59,7 @@ ws.on("open", async () => {
     console.error("Error subscribing to trades:", error);
     // Consider closing the connection or attempting retry logic here
     ws.close();
+    process.exit(1);
   }
 
   // Now that we're subscribed without errors, send a startup message to the channel
