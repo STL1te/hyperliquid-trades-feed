@@ -35,10 +35,6 @@ const bot = new Telegraf(botToken);
 const transport = new hl.HttpTransport(); // Using HTTP for fetching transaction details
 const client = new hl.PublicClient({ transport });
 
-const example = await client.txDetails({
-  hash: "0x556ecab2c80c2d0124690412812855269269000009aec1fbc0bc9a7df2f8e786eca2e0",
-});
-
 const ws = new WebSocket("wss://api.hyperliquid.xyz/ws");
 
 // Open the connection
