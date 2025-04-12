@@ -35,13 +35,6 @@ const bot = new Telegraf(botToken);
 const transport = new hl.HttpTransport(); // Using HTTP for fetching transaction details
 const client = new hl.PublicClient({ transport });
 
-// Send a startup message to the channel
-bot.telegram
-  .sendMessage(chatId, "Watching for liquidations...")
-  .catch((err) => {
-    console.error("Failed to send startup message:", err);
-  });
-
 const ws = new WebSocket("wss://api.hyperliquid.xyz/ws");
 
 // Open the connection
@@ -60,13 +53,20 @@ ws.on("open", async () => {
       ws.send(JSON.stringify(subscriptionMessage));
       console.log(`Sent subscription request for ${coin} trades.`);
       // Optional: Add a small delay between subscriptions if needed
-      // await new Promise(resolve => setTimeout(resolve, 50));
+      await new Promise((resolve) => setTimeout(resolve, 50));
     }
   } catch (error) {
     console.error("Error subscribing to trades:", error);
     // Consider closing the connection or attempting retry logic here
     ws.close();
   }
+
+  // Now that we're subscribed without errors, send a startup message to the channel
+  bot.telegram
+    .sendMessage(chatId, "Bot now up and running. Watching for liquidations...")
+    .catch((err) => {
+      console.error("Failed to send startup message:", err);
+    });
 });
 
 // Process websocket messages
