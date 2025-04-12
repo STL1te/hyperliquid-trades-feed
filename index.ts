@@ -210,7 +210,7 @@ function checkIfLiquidation(txDetails: hl.TxDetailsResponse): boolean {
   const action = txDetails?.tx?.action as unknown as LiquidateAction;
 
   // Check if the action object exists and its type is 'liquidate'
-  if ((action && action.type === "liquidate") || action.type === "order") {
+  if (action && action.type === "liquidate") {
     return true;
   }
 
