@@ -28,8 +28,8 @@ if (!botToken || !chatId) {
 }
 
 // Define the list of coins to monitor
-const SUPPORTED_COINS: string[] = ["BTC"]; // Add more coin symbols here, e.g., ["BTC", "ETH"]
-const MIN_NOTIONAL_VALUE = 50000;
+const SUPPORTED_COINS: string[] = ["BTC", "ETH", "SOL"]; // Add more coin symbols here, e.g., ["BTC", "ETH"]
+const MIN_NOTIONAL_VALUE = 10000;
 
 const bot = new Telegraf(botToken);
 const transport = new hl.HttpTransport(); // Using HTTP for fetching transaction details
@@ -64,7 +64,7 @@ ws.on("open", async () => {
 
   // Now that we're subscribed without errors, send a startup message to the channel
   bot.telegram
-    .sendMessage(chatId, "Bot now up and running. Watching for liquidations...")
+    .sendMessage(chatId, "Bot now up and running. Watching for trades...")
     .catch((err) => {
       console.error("Failed to send startup message:", err);
     });
@@ -150,17 +150,16 @@ async function processTrade(
         const notional = (notionalValue / 1000).toFixed(1) + "K";
         const coin = trade.coin;
         const side = trade.side === "B" ? "Short" : "Long";
+        const fixedPrice = price.toFixed(2);
 
         let msg = "";
 
         if (isLiquidation) {
-          msg = `#${coin} Liquidated ${side}: ${notional} at $${price.toFixed(
-            2
-          )}`;
+          msg = `#${coin} Liquidated ${side}: ${notional} at $${fixedPrice}`;
         } else {
           msg = `${
             trade.side === "B" ? "🔴" : "🟢"
-          } ${side} ${coin} - $${notional} at $${price.toFixed(2)}`;
+          } ${side} ${coin} - $${notional} at $${fixedPrice}`;
         }
 
         // Send message to Telegram
