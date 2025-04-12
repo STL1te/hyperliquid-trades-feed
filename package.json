@@ -1,0 +1,28 @@
+{
+  "name": "hl-liquidations",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "effect.js",
+  "scripts": {
+    "start": "node --experimental-strip-types index.ts",
+    "build": "tsc",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@nktkas/hyperliquid": "^0.17.2",
+    "@types/ws": "^8.18.1",
+    "dotenv": "^16.4.5",
+    "effect": "^3.1.8",
+    "p-limit": "^6.2.0",
+    "telegraf": "^4.16.3",
+    "ws": "^8.17.1"
+  },
+  "devDependencies": {
+    "@types/ws": "^8.5.10",
+    "typescript": "^5.4.5"
+  }
+}
