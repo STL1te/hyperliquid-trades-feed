@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "type": "module",
   "main": "effect.js",
+  "engines": {
+    "node": ">=22.0.0"
+  },
   "scripts": {
     "start": "node --experimental-strip-types index.ts",
     "build": "tsc",
@@ -22,6 +25,7 @@
     "ws": "^8.17.1"
   },
   "devDependencies": {
+    "@railway/cli": "^4.0.0",
     "@types/ws": "^8.5.10",
     "typescript": "^5.4.5"
   }
