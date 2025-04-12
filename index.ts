@@ -158,9 +158,9 @@ async function processTrade(
             2
           )}`;
         } else {
-          msg = `${trade.side === "B" ? "🟢" : "🔴"} ${side} ${
-            trade.coin
-          } - $${notional} at $${price.toFixed(2)}`;
+          msg = `${
+            trade.side === "B" ? "🔴" : "🟢"
+          } ${side} ${coin} - $${notional} at $${price.toFixed(2)}`;
         }
 
         // Send message to Telegram
