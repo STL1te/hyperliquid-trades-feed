@@ -95,7 +95,7 @@ ws.on("message", async (data) => {
 
           // Process this trade asynchronously without blocking the loop
           processTrade(trade, price, notionalValue).catch((error) => {
-            console.error(`Error processing trade ${trade.hash}:`, error);
+            // console.error(`Error processing trade ${trade.hash}:`, error);
           });
         }
       }
