@@ -62,19 +62,19 @@ ws.on("open", async () => {
   }
 
   // Now that we're subscribed without errors, send a startup message to the channel
-  bot.telegram
-    .sendMessage(
-      chatId,
-      "Bot restarted. Watching for trades... \n\n" +
-        "Current minimum notional value: $" +
-        MIN_NOTIONAL_VALUE +
-        "\n\n" +
-        "Supported Coins: " +
-        SUPPORTED_COINS.join(", ")
-    )
-    .catch((err) => {
-      console.error("Failed to send startup message:", err);
-    });
+  // bot.telegram
+  //   .sendMessage(
+  //     chatId,
+  //     "Bot restarted. Watching for trades... \n\n" +
+  //       "Current minimum notional value: $" +
+  //       MIN_NOTIONAL_VALUE +
+  //       "\n\n" +
+  //       "Supported Coins: " +
+  //       SUPPORTED_COINS.join(", ")
+  //   )
+  //   .catch((err) => {
+  //     console.error("Failed to send startup message:", err);
+  //   });
 });
 
 // Process websocket messages
@@ -154,7 +154,15 @@ async function processTrade(
 
         // Check if the transaction involves a liquidation
         const isLiquidation = checkIfLiquidation(txDetails);
-        const notional = (notionalValue / 1000).toFixed(1) + "K";
+
+        // Format notional value as millions (M) if over 1M, otherwise as thousands (K)
+        let formattedNotional: string;
+        if (notionalValue >= 1000000) {
+          formattedNotional = (notionalValue / 1000000).toFixed(1) + "M";
+        } else {
+          formattedNotional = (notionalValue / 1000).toFixed(1) + "K";
+        }
+
         const coin = trade.coin;
         const side = trade.side === "B" ? "Short" : "Long";
         const fixedPrice = price.toFixed(2);
@@ -164,11 +172,11 @@ async function processTrade(
         if (isLiquidation) {
           msg = `#${coin} Liquidated ${
             trade.side === "B" ? "SHORT" : "LONG"
-          }: ${notional} at $${fixedPrice}`;
+          }: ${formattedNotional} at $${fixedPrice}`;
         } else {
           msg = `${
             trade.side === "B" ? "🔴" : "🟢"
-          } ${side} ${coin} - $${notional} at $${fixedPrice}`;
+          } ${side} ${coin} - $${formattedNotional} at $${fixedPrice}`;
         }
 
         // Send message to Telegram
