@@ -201,14 +201,10 @@ ws.on("close", () => {
 // This needs to be implemented based on the actual structure of txDetails
 function checkIfLiquidation(txDetails: hl.TxDetailsResponse): boolean {
   // Access the action object from the transaction details safely
-  const action = txDetails?.tx?.action;
+  const action = txDetails?.tx?.action as unknown as LiquidateAction;
 
   // Check if the action object exists and its type is 'liquidate'
   if (action && action.type === "liquidate") {
-    console.log(
-      `🚩Liquidation detected: Liquidator=${action.user}, Liquidated=${action.liquidatedUser},
-       Coin=${action.coin}, Side=${action.side}, Notional=${action.notional}`
-    );
     return true;
   }
 
