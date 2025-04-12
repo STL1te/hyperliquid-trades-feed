@@ -35,6 +35,10 @@ const bot = new Telegraf(botToken);
 const transport = new hl.HttpTransport(); // Using HTTP for fetching transaction details
 const client = new hl.PublicClient({ transport });
 
+const example = await client.txDetails({
+  hash: "0x556ecab2c80c2d0124690412812855269269000009aec1fbc0bc9a7df2f8e786eca2e0",
+});
+
 const ws = new WebSocket("wss://api.hyperliquid.xyz/ws");
 
 // Open the connection
@@ -43,11 +47,6 @@ ws.on("open", async () => {
 
   try {
     console.log(`Subscribing to trades for: ${SUPPORTED_COINS.join(", ")}`);
-    const example = await client.txDetails({
-      hash: "0x556ecab2c80c2d0124690412812855269269000009aec1fbc0bc9a7df2f8e786eca2e0",
-    });
-
-    console.log(example);
 
     // Iterate through the defined coins and subscribe
     for (const coin of SUPPORTED_COINS) {
@@ -95,7 +94,7 @@ ws.on("message", async (data) => {
 
           // Process this trade asynchronously without blocking the loop
           processTrade(trade, price, notionalValue).catch((error) => {
-            // console.error(`Error processing trade ${trade.hash}:`, error);
+            console.error(`Error processing trade ${trade.hash}:`, error);
           });
         }
       }
