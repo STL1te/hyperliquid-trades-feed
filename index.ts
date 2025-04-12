@@ -235,10 +235,10 @@ function logTrade(trade: hl.WsTrade, isLiquidation: boolean) {
 const server = http.createServer((req, res) => {
   // Set CORS headers for broader access
   res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Methods", "GET");
 
   // Return different responses based on the path
-  if (req.url === "/health" || req.url === "/") {
+  if (req.url === "/") {
     res.writeHead(200, { "Content-Type": "application/json" });
     res.end(
       JSON.stringify({
