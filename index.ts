@@ -90,7 +90,7 @@ ws.on("message", async (data) => {
 
           // Process this trade asynchronously without blocking the loop
           processTrade(trade, price, notionalValue).catch((error) => {
-            console.error(`Error processing trade ${trade.hash}:`, error);
+            // console.error(`Error processing trade ${trade.hash}:`, error);
           });
         }
       }
@@ -179,7 +179,7 @@ async function processTrade(
         } else if (retries > MAX_RETRIES) {
           console.error(`Max retries exceeded for trade ${trade.hash}:`, error);
         } else {
-          console.error(`Error processing trade ${trade.hash}:`, error);
+          // console.error(`Error processing trade ${trade.hash}:`, error);
         }
       }
     }
