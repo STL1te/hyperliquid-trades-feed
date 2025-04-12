@@ -147,24 +147,30 @@ async function processTrade(
 
         // Check if the transaction involves a liquidation
         const isLiquidation = checkIfLiquidation(txDetails);
+        const notional = (notionalValue / 1000).toFixed(1) + "K";
+
+        let msg = "";
 
         if (isLiquidation) {
           const coin = trade.coin;
           const side = trade.side === "B" ? "Short" : "Long";
-          const notional = (notionalValue / 1000).toFixed(1) + "K";
 
-          const msg = `${
-            side === "Long" ? "🟢" : "🔴"
-          } ${side} ${coin} - $${notional} at $${price.toFixed(2)}`;
-
-          // Send message to Telegram
-          await bot.telegram.sendMessage(chatId!, msg).catch((error) => {
-            console.error(
-              `Failed to send Telegram message for trade ${trade.hash}:`,
-              error
-            );
-          });
+          msg = `#${coin} Liquidated ${side}: ${notional} at $${price.toFixed(
+            2
+          )}`;
+        } else {
+          msg = `${trade.side === "B" ? "🟢" : "🔴"} ${trade.side} ${
+            trade.coin
+          } - $${notional} at $${price.toFixed(2)}`;
         }
+
+        // Send message to Telegram
+        await bot.telegram.sendMessage(chatId!, msg).catch((error) => {
+          console.error(
+            `Failed to send Telegram message for trade ${trade.hash}:`,
+            error
+          );
+        });
 
         logTrade(trade, txDetails, isLiquidation);
         success = true;
