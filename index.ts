@@ -148,18 +148,17 @@ async function processTrade(
         // Check if the transaction involves a liquidation
         const isLiquidation = checkIfLiquidation(txDetails);
         const notional = (notionalValue / 1000).toFixed(1) + "K";
+        const coin = trade.coin;
+        const side = trade.side === "B" ? "Short" : "Long";
 
         let msg = "";
 
         if (isLiquidation) {
-          const coin = trade.coin;
-          const side = trade.side === "B" ? "Short" : "Long";
-
           msg = `#${coin} Liquidated ${side}: ${notional} at $${price.toFixed(
             2
           )}`;
         } else {
-          msg = `${trade.side === "B" ? "🟢" : "🔴"} ${trade.side} ${
+          msg = `${trade.side === "B" ? "🟢" : "🔴"} ${side} ${
             trade.coin
           } - $${notional} at $${price.toFixed(2)}`;
         }
