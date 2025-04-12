@@ -29,7 +29,7 @@ if (!botToken || !chatId) {
 
 // Define the list of coins to monitor
 const SUPPORTED_COINS: string[] = ["BTC", "ETH", "SOL"]; // Add more coin symbols here, e.g., ["BTC", "ETH"]
-const MIN_NOTIONAL_VALUE = 100000;
+const MIN_NOTIONAL_VALUE = 50000;
 
 const bot = new Telegraf(botToken);
 const transport = new hl.HttpTransport(); // Using HTTP for fetching transaction details
@@ -51,7 +51,6 @@ ws.on("open", async () => {
         subscription: { type: "trades", coin: coin },
       };
       ws.send(JSON.stringify(subscriptionMessage));
-      console.log(`Sent subscription request for ${coin} trades.`);
       // Optional: Add a small delay between subscriptions if needed
       await new Promise((resolve) => setTimeout(resolve, 50));
     }
