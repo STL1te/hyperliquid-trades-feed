@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import WebSocket from "ws";
 import * as hl from "@nktkas/hyperliquid";
 import pLimit from "p-limit";
+import http from "http";
 
 // Define an interface for the specific structure of a liquidate action
 interface LiquidateAction {
@@ -230,16 +231,46 @@ function logTrade(trade: hl.WsTrade, isLiquidation: boolean) {
   );
 }
 
+// Create a simple HTTP server for health check
+const server = http.createServer((req, res) => {
+  // Set CORS headers for broader access
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+
+  // Return different responses based on the path
+  if (req.url === "/health" || req.url === "/") {
+    res.writeHead(200, { "Content-Type": "application/json" });
+    res.end(
+      JSON.stringify({
+        status: "OK",
+        uptime: process.uptime(),
+        timestamp: new Date().toISOString(),
+      })
+    );
+  } else {
+    res.writeHead(404, { "Content-Type": "application/json" });
+    res.end(JSON.stringify({ error: "Not found" }));
+  }
+});
+
+// Use the PORT environment variable or default to 3000
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Health check server running on port ${PORT}`);
+});
+
 bot.launch();
 
 // Enable graceful stop
 process.once("SIGINT", () => {
   ws.close();
   bot.stop("SIGINT");
+  server.close();
 });
 process.once("SIGTERM", () => {
   ws.close();
   bot.stop("SIGTERM");
+  server.close();
 });
 
 console.log("Telegram bot started...");
