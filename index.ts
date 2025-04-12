@@ -166,7 +166,7 @@ async function processTrade(
           });
         }
 
-        logTrade(trade, isLiquidation);
+        logTrade(trade, txDetails, isLiquidation);
         success = true;
       } catch (error: any) {
         retries++;
@@ -213,7 +213,11 @@ function checkIfLiquidation(txDetails: hl.TxDetailsResponse): boolean {
 }
 
 // helper function to log a trade
-function logTrade(trade: hl.WsTrade, isLiquidation: boolean) {
+function logTrade(
+  trade: hl.WsTrade,
+  txDetails: hl.TxDetailsResponse,
+  isLiquidation: boolean
+) {
   console.log(
     `┌─────────── TRADE DETECTED ───────────┐
 │ Hash:      ${trade.hash.substring(0, 10)}...
@@ -223,6 +227,7 @@ function logTrade(trade: hl.WsTrade, isLiquidation: boolean) {
 │ Price:     ${parseFloat(trade.px).toFixed(2)}
 │ Notional:  $${(parseFloat(trade.px) * parseFloat(trade.sz)).toFixed(2)}
 │ IsLiquidation: ${isLiquidation}
+│ Tx Details: ${JSON.stringify(txDetails)}
 │ Timestamp: ${new Date(trade.time).toLocaleString()}
 └────────────────────────────────────┘`
   );
