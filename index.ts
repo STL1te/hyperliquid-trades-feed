@@ -29,7 +29,7 @@ if (!botToken || !chatId) {
 
 // Define the list of coins to monitor
 const SUPPORTED_COINS: string[] = ["BTC", "ETH", "SOL"]; // Add more coin symbols here, e.g., ["BTC", "ETH"]
-const MIN_NOTIONAL_VALUE = 10000;
+const MIN_NOTIONAL_VALUE = 100000;
 
 const bot = new Telegraf(botToken);
 const transport = new hl.HttpTransport(); // Using HTTP for fetching transaction details
