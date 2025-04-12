@@ -28,8 +28,8 @@ if (!botToken || !chatId) {
 }
 
 // Define the list of coins to monitor
-const SUPPORTED_COINS: string[] = ["BTC", "ETH", "SOL"]; // Add more coin symbols here, e.g., ["BTC", "ETH"]
-const MIN_NOTIONAL_VALUE = 100000;
+const SUPPORTED_COINS: string[] = ["BTC", "ETH", "SOL", "HYPE"]; // Add more coin symbols here, e.g., ["BTC", "ETH"]
+const MIN_NOTIONAL_VALUE = 250000;
 
 const bot = new Telegraf(botToken);
 const transport = new hl.HttpTransport(); // Using HTTP for fetching transaction details
@@ -63,7 +63,15 @@ ws.on("open", async () => {
 
   // Now that we're subscribed without errors, send a startup message to the channel
   bot.telegram
-    .sendMessage(chatId, "Bot now up and running. Watching for trades...")
+    .sendMessage(
+      chatId,
+      "Bot restarted. Watching for trades... \n\n" +
+        "Current minimum notional value: $" +
+        MIN_NOTIONAL_VALUE +
+        "\n\n" +
+        "Supported Coins: " +
+        SUPPORTED_COINS.join(", ")
+    )
     .catch((err) => {
       console.error("Failed to send startup message:", err);
     });
