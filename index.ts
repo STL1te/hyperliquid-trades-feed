@@ -153,9 +153,7 @@ async function processTrade(
           const side = trade.side === "B" ? "Short" : "Long";
           const notional = (notionalValue / 1000).toFixed(1) + "K";
 
-          const msg = `🔴 #${coin} Liquidated ${side}: $${notional} at $${price.toFixed(
-            2
-          )}`;
+          const msg = `${side} ${coin} - $${notional} at $${price.toFixed(2)}`;
 
           // Send message to Telegram
           await bot.telegram.sendMessage(chatId!, msg).catch((error) => {
@@ -204,7 +202,7 @@ function checkIfLiquidation(txDetails: hl.TxDetailsResponse): boolean {
   const action = txDetails?.tx?.action as unknown as LiquidateAction;
 
   // Check if the action object exists and its type is 'liquidate'
-  if (action && action.type === "liquidate") {
+  if ((action && action.type === "liquidate") || action.type === "order") {
     return true;
   }
 
