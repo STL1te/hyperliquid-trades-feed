@@ -148,14 +148,14 @@ async function processTrade(
         const isLiquidation = checkIfLiquidation(txDetails);
         const notional = (notionalValue / 1000).toFixed(1) + "K";
         const coin = trade.coin;
-        const side = trade.side === "B" ? "Shorted" : "Longed";
+        const side = trade.side === "B" ? "Short" : "Long";
         const fixedPrice = price.toFixed(2);
 
         let msg = "";
 
         if (isLiquidation) {
           msg = `#${coin} Liquidated ${
-            trade.side === "B" ? "Short" : "Long"
+            trade.side === "B" ? "SHORT" : "LONG"
           }: ${notional} at $${fixedPrice}`;
         } else {
           msg = `${
