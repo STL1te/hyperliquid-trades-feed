@@ -24,7 +24,13 @@ const shutdown = async (signal: string) => {
   }, 10000); // Force exit after 10 seconds
 
   try {
-    // Stop the bot
+    // Tell the health check to start failing to prevent Railway from routing new requests
+    if (server) {
+      server.close();
+      console.log("Health check server closed");
+    }
+
+    // Stop the bot - this is critical to release the Telegram webhook
     bot.stop(signal);
     console.log("Telegram bot stopped");
 
@@ -32,9 +38,8 @@ const shutdown = async (signal: string) => {
     if (ws) ws.close();
     console.log("WebSocket connection closed");
 
-    // Close health check server
-    if (server) server.close();
-    console.log("Health check server closed");
+    // Give Telegram a moment to fully close the connection
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     console.log("Graceful shutdown completed");
     process.exit(0);
