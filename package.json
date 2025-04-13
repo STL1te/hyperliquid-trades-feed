@@ -14,7 +14,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@nktkas/hyperliquid": "^0.1.5",
+    "@nktkas/hyperliquid": "^0.17.2",
     "dotenv": "^16.4.4",
     "p-limit": "^3.1.0",
     "telegraf": "^4.15.3",
