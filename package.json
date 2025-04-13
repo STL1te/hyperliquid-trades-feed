@@ -1,32 +1,32 @@
 {
   "name": "hl-liquidations",
   "version": "1.0.0",
-  "type": "module",
-  "main": "effect.js",
+  "description": "",
+  "main": "dist/index.js",
+  "type": "commonjs",
   "engines": {
-    "node": ">=22.0.0"
+    "node": ">=22.4.0"
   },
   "scripts": {
-    "start": "node --experimental-strip-types index.ts",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "node dist/index.js",
+    "dev": "ts-node index.ts",
+    "deploy": "npm run build && npm start"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "@nktkas/hyperliquid": "^0.17.2",
-    "@types/ws": "^8.18.1",
-    "dotenv": "^16.4.5",
-    "effect": "^3.1.8",
-    "p-limit": "^6.2.0",
-    "telegraf": "^4.16.3",
-    "ws": "^8.17.1"
+    "dotenv": "^16.4.4",
+    "p-limit": "^3.1.0",
+    "telegraf": "^4.15.3",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
-    "@railway/cli": "^4.0.0",
+    "@types/node": "^20.11.19",
     "@types/ws": "^8.5.10",
-    "typescript": "^5.4.5"
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
   }
 }
