@@ -65,12 +65,12 @@ const processTrade = async (
 
         if (isLiquidation) {
           msg = `${trade.side === "B" ? "🟢" : "🔴"} #${coin} Liquidated ${
-            trade.side === "B" ? "LONG" : "SHORT"
-          }: ${formattedNotional} at $${fixedPrice} <a href="${txLink}">link</a>`;
+            trade.side === "B" ? "Long" : "Short"
+          }: ${formattedNotional} at $${fixedPrice} - <a href="${txLink}">Explorer</a>`;
         } else {
           msg = `${
             trade.side === "B" ? "🟢" : "🔴"
-          } ${side} #${coin} - $${formattedNotional} at $${fixedPrice} <a href="${txLink}">link</a>`;
+          } ${side} #${coin}: $${formattedNotional} at $${fixedPrice} - <a href="${txLink}">Explorer</a>`;
         }
 
         // Send message to Telegram using HTML parse mode
