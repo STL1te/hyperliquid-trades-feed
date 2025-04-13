@@ -62,7 +62,7 @@ const processTrade = async (
         } else {
           msg = `${
             trade.side === "B" ? "🔴" : "🟢"
-          } ${side} ${coin} - $${formattedNotional} at $${fixedPrice} [<a href="${txLink}">tx</a>]`;
+          } ${side} #${coin} - $${formattedNotional} at $${fixedPrice} [<a href="${txLink}">tx</a>]`;
         }
 
         // Send message to Telegram using HTML parse mode
