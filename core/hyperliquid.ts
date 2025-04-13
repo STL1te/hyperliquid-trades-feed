@@ -56,12 +56,12 @@ const processTrade = async (
         let msg = "";
 
         if (isLiquidation) {
-          msg = `#${coin} Liquidated ${
+          msg = `${trade.side === "B" ? "🟢" : "🔴"} #${coin} Liquidated ${
             trade.side === "B" ? "LONG" : "SHORT"
           }: ${formattedNotional} at $${fixedPrice} [<a href="${txLink}">tx</a>]`;
         } else {
           msg = `${
-            trade.side === "B" ? "🔴" : "🟢"
+            trade.side === "B" ? "🟢" : "🔴"
           } ${side} #${coin} - $${formattedNotional} at $${fixedPrice} [<a href="${txLink}">tx</a>]`;
         }
 
