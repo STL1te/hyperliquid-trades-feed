@@ -134,12 +134,3 @@ const setupCloseHandler = () => {
 
 // Export WebSocket instance for external use if needed
 export const getWebSocket = () => ws;
-
-// Clean up on process exit
-process.once("SIGINT", () => {
-  if (ws) ws.close();
-});
-
-process.once("SIGTERM", () => {
-  if (ws) ws.close();
-});

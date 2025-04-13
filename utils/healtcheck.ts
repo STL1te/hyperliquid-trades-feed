@@ -29,11 +29,5 @@ export const healthcheck = () => {
     console.log("Health endpoint is running on port 3000");
   });
 
-  // Handle SIGINT and SIGTERM
-  process.once("SIGINT", () => {
-    server.close();
-  });
-  process.once("SIGTERM", () => {
-    server.close();
-  });
+  return server; // Return the server instance
 };
