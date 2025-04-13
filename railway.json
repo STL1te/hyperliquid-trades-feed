@@ -6,7 +6,6 @@
   "deploy": {
     "runtime": "V2",
     "numReplicas": 1,
-    "healthcheckPath": "/",
     "sleepApplication": false,
     "multiRegionConfig": {
       "asia-southeast1-eqsg3a": {
