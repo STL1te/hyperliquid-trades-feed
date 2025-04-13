@@ -1,6 +1,6 @@
-import { healthcheck } from "./utils";
-import { websocket } from "./core/websocket";
-import { bot } from "./core/bot";
+import { healthcheck } from "./utils/index.js";
+import { websocket } from "./core/websocket.js";
+import { bot } from "./core/bot.js";
 
 // Handle all-things websocket
 websocket();
