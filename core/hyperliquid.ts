@@ -50,25 +50,30 @@ const processTrade = async (
         const side = trade.side === "B" ? "Short" : "Long";
         const fixedPrice = price.toFixed(2);
 
+        // Create transaction explorer link
+        const txLink = `https://app.hyperliquid.xyz/explorer/tx/${trade.hash}`;
+
         let msg = "";
 
         if (isLiquidation) {
           msg = `#${coin} Liquidated ${
             trade.side === "B" ? "SHORT" : "LONG"
-          }: ${formattedNotional} at $${fixedPrice}`;
+          }: ${formattedNotional} at $${fixedPrice} <a href="${txLink}">tx</a>`;
         } else {
           msg = `${
             trade.side === "B" ? "🔴" : "🟢"
-          } ${side} ${coin} - $${formattedNotional} at $${fixedPrice}`;
+          } ${side} ${coin} - $${formattedNotional} at $${fixedPrice} <a href="${txLink}">tx</a>`;
         }
 
-        // Send message to Telegram
-        await bot.telegram.sendMessage(CHAT_ID!, msg).catch((error) => {
-          console.error(
-            `Failed to send Telegram message for trade ${trade.hash}:`,
-            error
-          );
-        });
+        // Send message to Telegram using HTML parse mode
+        await bot.telegram
+          .sendMessage(CHAT_ID!, msg, { parse_mode: "HTML" })
+          .catch((error) => {
+            console.error(
+              `Failed to send Telegram message for trade ${trade.hash}:`,
+              error
+            );
+          });
 
         // logTrade(trade, txDetails, isLiquidation);
         success = true;
