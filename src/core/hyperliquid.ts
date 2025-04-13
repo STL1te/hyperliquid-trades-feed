@@ -3,6 +3,7 @@ import * as hl from "@nktkas/hyperliquid";
 import { bot } from "./bot";
 import { CHAT_ID } from "../config";
 import { limiter, MAX_RETRIES, RETRY_DELAY_MS, API_DELAY_MS } from "../utils";
+import { formatNotional } from "../utils/format";
 
 export interface LiquidateAction {
   type: "liquidate" | string;
@@ -46,13 +47,8 @@ const processTrade = async (
         // Check if the transaction involves a liquidation
         const isLiquidation = checkIfLiquidation(txDetails);
 
-        // Format notional value as millions (M) if over 1M, otherwise as thousands (K)
-        let formattedNotional: string;
-        if (notionalValue >= 1000000) {
-          formattedNotional = (notionalValue / 1000000).toFixed(1) + "M";
-        } else {
-          formattedNotional = (notionalValue / 1000).toFixed(1) + "K";
-        }
+        // Format notional value with our new helper function
+        const formattedNotional = formatNotional(notionalValue);
 
         const coin = trade.coin;
         const side = trade.side === "B" ? "Long" : "Short";
