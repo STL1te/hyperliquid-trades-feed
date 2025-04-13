@@ -47,7 +47,7 @@ const processTrade = async (
         }
 
         const coin = trade.coin;
-        const side = trade.side === "B" ? "Short" : "Long";
+        const side = trade.side === "B" ? "Long" : "Short";
         const fixedPrice = price.toFixed(2);
 
         // Create transaction explorer link
@@ -57,12 +57,12 @@ const processTrade = async (
 
         if (isLiquidation) {
           msg = `#${coin} Liquidated ${
-            trade.side === "B" ? "SHORT" : "LONG"
-          }: ${formattedNotional} at $${fixedPrice} <a href="${txLink}">tx</a>`;
+            trade.side === "B" ? "LONG" : "SHORT"
+          }: ${formattedNotional} at $${fixedPrice} [<a href="${txLink}">tx</a>]`;
         } else {
           msg = `${
             trade.side === "B" ? "🔴" : "🟢"
-          } ${side} ${coin} - $${formattedNotional} at $${fixedPrice} <a href="${txLink}">tx</a>`;
+          } ${side} ${coin} - $${formattedNotional} at $${fixedPrice} [<a href="${txLink}">tx</a>]`;
         }
 
         // Send message to Telegram using HTML parse mode
