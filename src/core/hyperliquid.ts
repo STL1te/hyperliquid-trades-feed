@@ -77,26 +77,20 @@ const processTrade = async (
         await bot.telegram
           .sendMessage(CHAT_ID!, msg, { parse_mode: "HTML" })
           .catch((error) => {
-            console.error(
-              `Failed to send Telegram message for trade ${trade.hash}:`,
-              error
-            );
+            throw new Error(`Something went wrong: ${error}`);
           });
 
-        // logTrade(trade, txDetails, isLiquidation);
         success = true;
       } catch (error: any) {
         retries++;
 
         // If it's a rate limit error and we haven't exceeded max retries
         if (error?.response?.status === 429 && retries <= MAX_RETRIES) {
-          console.log(
-            `Rate limit hit for trade ${trade.hash}. Retry attempt ${retries}/${MAX_RETRIES}`
-          );
+          throw new Error(`Rate limit hit for trade ${trade.hash}: ${error}`);
         } else if (retries > MAX_RETRIES) {
-          console.error(`Max retries exceeded for trade ${trade.hash}:`, error);
+          throw new Error(`Rate limit hit for trade ${trade.hash}: ${error}`);
         } else {
-          // console.error(`Error processing trade ${trade.hash}:`, error);
+          throw new Error(`Error processing trade ${trade.hash}: ${error}`);
         }
       }
     }

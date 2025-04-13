@@ -38,10 +38,7 @@ const setupOpenHandler = () => {
         await new Promise((resolve) => setTimeout(resolve, 50));
       }
     } catch (error) {
-      console.error("Error subscribing to trades:", error);
-      ws.close();
-      // Use setTimeout to allow time for cleanup before exit
-      setTimeout(() => process.exit(1), 1000);
+      throw new Error(`Error subscribing to trades: ${error}`);
     }
   });
 };
@@ -65,20 +62,19 @@ const setupMessageHandler = () => {
           if (notionalValue > MIN_NOTIONAL_VALUE) {
             // Process this trade asynchronously without blocking the loop
             processTrade(trade, price, notionalValue).catch((error) => {
-              console.error(`Error processing trade ${trade.hash}:`, error);
+              throw new Error(`Error processing trade ${trade.hash}: ${error}`);
             });
           }
         }
       } else if (message.channel && message.channel !== "trades") {
         // Log messages from other channels if they arrive
       } else if (message.ping) {
-        console.log("Received ping message");
         ws.send(JSON.stringify({ pong: true })); // Send pong response
       } else {
-        console.log("Received unexpected message format:", message);
+        throw new Error(`Received unexpected message format: ${message}`);
       }
     } catch (error) {
-      console.error("Error processing WebSocket message:", error);
+      throw new Error(`Error processing WebSocket message: ${error}`);
     }
   });
 };
@@ -86,17 +82,13 @@ const setupMessageHandler = () => {
 // Handle errors
 const setupErrorHandler = () => {
   ws.on("error", (error) => {
-    console.error("WebSocket error:", error);
+    throw new Error(`WebSocket error: ${error}`);
   });
 };
 
 // Handle connection closing with reconnection logic
 const setupCloseHandler = () => {
   ws.on("close", () => {
-    console.log(
-      "Disconnected from Hyperliquid WebSocket. Attempting to reconnect..."
-    );
-
     // Reconnection logic with exponential backoff
     let reconnectAttempt = 0;
     const maxReconnectAttempts = 10;
@@ -106,14 +98,8 @@ const setupCloseHandler = () => {
       if (reconnectAttempt < maxReconnectAttempts) {
         reconnectAttempt++;
         const delay = baseDelay * Math.pow(1.5, reconnectAttempt - 1);
-        console.log(
-          `Reconnect attempt ${reconnectAttempt}/${maxReconnectAttempts} in ${delay}ms`
-        );
 
         setTimeout(() => {
-          console.log(
-            `Attempting to reconnect (${reconnectAttempt}/${maxReconnectAttempts})...`
-          );
           // Create a new WebSocket without calling the full websocket() function
           ws = new WebSocket("wss://api.hyperliquid.xyz/ws");
           // Re-setup the handlers on the new instance
@@ -123,8 +109,7 @@ const setupCloseHandler = () => {
           setupCloseHandler();
         }, delay);
       } else {
-        console.error("Max reconnection attempts reached. Exiting...");
-        process.exit(1);
+        throw new Error("Max reconnection attempts reached. Exiting...");
       }
     };
 

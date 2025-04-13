@@ -26,7 +26,7 @@ export const healthcheck = () => {
 
   // Listen on port 3000
   server.listen(3000, () => {
-    console.log("Health endpoint is running on port 3000");
+    console.log('Health endpoint is running on port 3000 - path: "/"');
   });
 
   return server; // Return the server instance

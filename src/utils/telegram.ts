@@ -11,6 +11,6 @@ export const sendTelegramMessage = async (
   try {
     await bot.telegram.sendMessage(CHAT_ID!, msg);
   } catch (error) {
-    console.error("Error sending Telegram message:", error);
+    throw new Error(`Error sending Telegram message: ${error}`);
   }
 };
