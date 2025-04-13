@@ -1,7 +1,7 @@
 {
   "name": "hl-liquidations",
   "version": "1.0.0",
-  "description": "",
+  "description": "Hyperliquid Trades Feed via Telegram Bot",
   "main": "dist/index.js",
   "type": "commonjs",
   "engines": {
@@ -10,12 +10,14 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
-    "dev": "ts-node index.ts",
+    "dev": "ts-node src/index.ts",
     "deploy": "npm run build && npm start"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": [
+    "hyperliquid"
+  ],
+  "author": "rokitgg",
+  "license": "MIT",
   "dependencies": {
     "@nktkas/hyperliquid": "^0.17.2",
     "dotenv": "^16.4.4",

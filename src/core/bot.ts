@@ -1,5 +1,5 @@
 import { Telegraf } from "telegraf";
-import { BOT_TOKEN } from "../config/index.js";
+import { BOT_TOKEN } from "../config";
 
 // Create the bot instance with polling configuration
 const bot = new Telegraf(BOT_TOKEN);

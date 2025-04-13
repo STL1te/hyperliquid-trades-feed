@@ -1,9 +1,17 @@
 import * as hl from "@nktkas/hyperliquid";
-import { LiquidateAction } from "../types";
 
 import { bot } from "./bot";
 import { CHAT_ID } from "../config";
 import { limiter, MAX_RETRIES, RETRY_DELAY_MS, API_DELAY_MS } from "../utils";
+
+export interface LiquidateAction {
+  type: "liquidate" | string;
+  user: hl.Hex; // Address of the liquidator
+  isCross: boolean;
+  asset: number; // Asset identifier (might need mapping to coin symbol if used)
+  isBuy: boolean;
+  liquidatedUser: hl.Hex; // Address of the liquidated user
+}
 
 const transport = new hl.HttpTransport();
 const client = new hl.PublicClient({ transport });

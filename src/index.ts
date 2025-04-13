@@ -1,9 +1,11 @@
-import { healthcheck } from "./utils/index";
+import { healthcheck } from "./utils/healtcheck";
 import { websocket } from "./core/websocket";
 import { bot } from "./core/bot";
 
 // Short delay before starting to allow any previous instance to shut down
-console.log("Starting application with a short delay to allow previous instances to shut down...");
+console.log(
+  "Starting application with a short delay to allow previous instances to shut down..."
+);
 
 // Delay startup to give any previous instance time to shut down
 setTimeout(() => {
@@ -14,12 +16,15 @@ setTimeout(() => {
   const ws = websocket();
 
   // Launch bot
-  bot.launch().then(() => {
-    console.log("Hyperliquid liquidations bot started successfully!");
-  }).catch(err => {
-    console.error("Failed to start Telegram bot:", err);
-    process.exit(1);
-  });
+  bot
+    .launch()
+    .then(() => {
+      console.log("Hyperliquid liquidations bot started successfully!");
+    })
+    .catch((err: any) => {
+      console.error("Failed to start Telegram bot:", err);
+      process.exit(1);
+    });
 
   // Centralized shutdown handler
   const shutdown = async (signal: string) => {
