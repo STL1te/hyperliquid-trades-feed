@@ -1,6 +1,6 @@
 {
   "name": "hl-liquidations",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Hyperliquid Trades Feed via Telegram Bot",
   "main": "dist/index.js",
   "type": "commonjs",
