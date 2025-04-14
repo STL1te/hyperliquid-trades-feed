@@ -4,7 +4,7 @@ dotenv.config();
 
 // Define the list of coins to monitor
 const SUPPORTED_COINS: string[] = ["BTC", "ETH", "SOL", "HYPE"]; // Add more coin symbols here, e.g., ["BTC", "ETH"]
-const MIN_NOTIONAL_VALUE = 400000;
+const MIN_NOTIONAL_VALUE = 500000;
 
 // Environment variables
 const BOT_TOKEN = process.env.TELEGRAM_BOT_TOKEN as string;
