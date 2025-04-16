@@ -150,7 +150,7 @@ const processTrade = async (
         }
 
         // Only add position context if there's an active position
-        if (positionContext && positionContext.positionSize !== `0 ${coin}`) {
+        if (assetPosition) {
           msg += `\n Account Value: $${state.marginSummary.accountValue}`;
           msg += `\n Position Size: ${assetPosition?.position.szi} ${assetPosition?.position.coin}`;
           msg += `\n Leverage: ${assetPosition?.position.leverage.value}x (${assetPosition?.position.leverage.type})`;
