@@ -139,6 +139,7 @@ const processTrade = async (
 
         // Create transaction explorer link
         const txLink = `https://app.hyperliquid.xyz/explorer/tx/${trade.hash}`;
+        const traderLink = `https://hyperdash.info/trader/${trader}`;
 
         let msg = "";
 
@@ -146,16 +147,12 @@ const processTrade = async (
         if (isLiquidation) {
           msg = `${trade.side === "B" ? "🟢" : "🔴"} #${coin} Liquidated ${side} ${formattedNotional} at $${fixedPrice}`;
         } else {
-          msg = `${trade.side === "B" ? "🟢" : "🔴"} ${side} #${coin} $${formattedNotional} at $${fixedPrice} - 🔗 <a href="${txLink}">Explorer</a>`;
+          msg = `${trade.side === "B" ? "🟢" : "🔴"} ${assetPosition?.position.leverage.value}X  ${side} #${coin} $${formattedNotional} at $${fixedPrice} - 🔗 <a href="${traderLink}">Explorer</a>`;
         }
 
         // Only add position context if there's an active position
         if (assetPosition) {
-          msg += `\n Account Value: $${formatNotional(parseFloat(state.marginSummary.accountValue))}`;
-          msg += `\n Position Size: ${parseFloat(assetPosition?.position.szi).toFixed(2)} ${assetPosition?.position.coin}`;
-          msg += `\n Leverage: ${assetPosition?.position.leverage.value}x (${assetPosition?.position.leverage.type})`;
-          msg += `\n Liquidation Price: ${assetPosition?.position.liquidationPx ? '$' + parseFloat(assetPosition?.position.liquidationPx).toFixed(2) : 'N/A'}`;
-          msg += `\n Unrealized PnL: ${Math.round(parseFloat(assetPosition?.position.unrealizedPnl ?? "0"))} USD (${(parseFloat(assetPosition?.position.returnOnEquity ?? "0") * 100).toFixed(2)}% ROE)`;
+          msg += `\n Account Value: $${formatNotional(parseFloat(state.marginSummary.accountValue))} - Position Size: ${parseFloat(assetPosition?.position.szi).toFixed(2)} ${assetPosition?.position.coin} - <a href="${txLink}">Trader</a>`;
         }
 
         // Send message to Telegram using HTML parse mode
