@@ -41,7 +41,7 @@ const getPositionContext = async (
 ): Promise<PositionContext | null> => {
   try {
     const state = await client.clearinghouseState({ user: address });
-    
+    console.log(state);
     // Find position for the given coin
     const position = state.assetPositions.find(
       (pos) => pos.type === "oneWay" && pos.position.coin === coin
@@ -71,7 +71,7 @@ const getMarketContext = async (coin: string): Promise<MarketContext | null> => 
     const meta = await client.metaAndAssetCtxs();
     const assetCtx = meta[1].find((ctx: any, idx: number) => 
       meta[0].universe[idx].name === coin
-    );
+    );  
 
     if (!assetCtx) return null;
 
@@ -141,12 +141,11 @@ const processTrade = async (
         }
 
         // Add position context if available
-        if (positionContext) {
-          const pnlEmoji = positionContext.unrealizedPnl >= 0 ? "📈" : "📉";
-          msg += `\n💰 Position: Entry $${positionContext.entryPrice.toFixed(2)} | Liq. $${positionContext.liquidationPrice.toFixed(2)}`;
-          msg += `\n${pnlEmoji} PnL: $${positionContext.unrealizedPnl.toFixed(2)} (${(positionContext.returnOnEquity * 100).toFixed(2)}% ROE)`;
-          msg += `\n⚡ Leverage: ${positionContext.leverage}x | Margin: $${positionContext.marginUsed.toFixed(2)}`;
-        }
+        // if (positionContext) {
+        //   const pnlEmoji = positionContext.unrealizedPnl >= 0 ? "📈" : "📉";
+        //   msg += `\n💰 Position: Entry $${positionContext.entryPrice.toFixed(2)} | Liq. $${positionContext.liquidationPrice.toFixed(2)}`;
+        //   msg += `\n${pnlEmoji} PnL: $${positionContext.unrealizedPnl.toFixed(2)} (${(positionContext.returnOnEquity * 100).toFixed(2)}% ROE)`;
+        // }
 
         // // Add market context if available
         // if (marketContext) {
@@ -155,7 +154,7 @@ const processTrade = async (
         //   msg += `\n Open Interest: $${marketContext.openInterest}`;
         // }
 
-        msg += `\n🔍 <a href="${txLink}">Explorer</a>`;
+        msg += `- 🔗 <a href="${txLink}">Explorer</a>`;
 
         // Send message to Telegram using HTML parse mode
         await bot.telegram
