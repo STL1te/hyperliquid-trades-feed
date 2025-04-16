@@ -16,6 +16,77 @@ export interface LiquidateAction {
 const transport = new hl.HttpTransport();
 const client = new hl.PublicClient({ transport });
 
+// Add new interfaces for position context
+interface PositionContext {
+  entryPrice: number;
+  leverage: number;
+  liquidationPrice: number;
+  unrealizedPnl: number;
+  positionValue: number;
+  returnOnEquity: number;
+  marginUsed: number;
+}
+
+interface MarketContext {
+  markPrice: number;
+  funding: number;
+  openInterest: string;
+  dayVolume: string;
+}
+
+// Add new function to get position context
+const getPositionContext = async (
+  address: hl.Hex,
+  coin: string
+): Promise<PositionContext | null> => {
+  try {
+    const state = await client.clearinghouseState({ user: address });
+    
+    // Find position for the given coin
+    const position = state.assetPositions.find(
+      (pos) => pos.type === "oneWay" && pos.position.coin === coin
+    );
+
+    if (!position) return null;
+
+    const pos = position.position;
+    return {
+      entryPrice: parseFloat(pos.entryPx),
+      leverage: pos.leverage.type === "isolated" ? parseFloat(pos.leverage.value.toString()) : 0,
+      liquidationPrice: parseFloat(pos.liquidationPx ?? "N/A"),
+      unrealizedPnl: parseFloat(pos.unrealizedPnl),
+      positionValue: parseFloat(pos.positionValue),
+      returnOnEquity: parseFloat(pos.returnOnEquity),
+      marginUsed: parseFloat(pos.marginUsed)
+    };
+  } catch (error) {
+    console.error(`Error fetching position context: ${error}`);
+    return null;
+  }
+};
+
+// Add new function to get market context
+const getMarketContext = async (coin: string): Promise<MarketContext | null> => {
+  try {
+    const meta = await client.metaAndAssetCtxs();
+    const assetCtx = meta[1].find((ctx: any, idx: number) => 
+      meta[0].universe[idx].name === coin
+    );
+
+    if (!assetCtx) return null;
+
+    return {
+      markPrice: parseFloat(assetCtx.markPx),
+      funding: parseFloat(assetCtx.funding),
+      openInterest: assetCtx.openInterest,
+      dayVolume: assetCtx.dayNtlVlm
+    };
+  } catch (error) {
+    console.error(`Error fetching market context: ${error}`);
+    return null;
+  }
+};
+
 // Process a trade and send a message to Telegram
 const processTrade = async (
   trade: hl.WsTrade,
@@ -46,6 +117,10 @@ const processTrade = async (
         // Check if the transaction involves a liquidation
         const isLiquidation = checkIfLiquidation(txDetails);
 
+        // Get additional context
+        const positionContext = await getPositionContext(trade.users[0], trade.coin);
+        const marketContext = await getMarketContext(trade.coin);
+
         // Format notional value with our new helper function
         const formattedNotional = formatNotional(notionalValue);
 
@@ -58,15 +133,29 @@ const processTrade = async (
 
         let msg = "";
 
+        // Enhanced message with position and market context
         if (isLiquidation) {
-          msg = `${trade.side === "B" ? "🟢" : "🔴"} #${coin} Liquidated ${
-            trade.side === "B" ? "Long" : "Short"
-          } ${formattedNotional} at $${fixedPrice} - <a href="${txLink}">Explorer</a>`;
+          msg = `${trade.side === "B" ? "🟢" : "🔴"} #${coin} Liquidated ${side} ${formattedNotional} at $${fixedPrice}`;
         } else {
-          msg = `${
-            trade.side === "B" ? "🟢" : "🔴"
-          } ${side} #${coin} $${formattedNotional} at $${fixedPrice} - <a href="${txLink}">Explorer</a>`;
+          msg = `${trade.side === "B" ? "🟢" : "🔴"} ${side} #${coin} $${formattedNotional} at $${fixedPrice}`;
         }
+
+        // Add position context if available
+        if (positionContext) {
+          const pnlEmoji = positionContext.unrealizedPnl >= 0 ? "📈" : "📉";
+          msg += `\n💰 Position: Entry $${positionContext.entryPrice.toFixed(2)} | Liq. $${positionContext.liquidationPrice.toFixed(2)}`;
+          msg += `\n${pnlEmoji} PnL: $${positionContext.unrealizedPnl.toFixed(2)} (${(positionContext.returnOnEquity * 100).toFixed(2)}% ROE)`;
+          msg += `\n⚡ Leverage: ${positionContext.leverage}x | Margin: $${positionContext.marginUsed.toFixed(2)}`;
+        }
+
+        // // Add market context if available
+        // if (marketContext) {
+        //   msg += `\n📊 24h Volume: $${marketContext.dayVolume}`;
+        //   msg += `\n Annualized Funding Rate: ${(marketContext.funding * 100 * 365 * 3).toFixed(2)}%`;
+        //   msg += `\n Open Interest: $${marketContext.openInterest}`;
+        // }
+
+        msg += `\n🔍 <a href="${txLink}">Explorer</a>`;
 
         // Send message to Telegram using HTML parse mode
         await bot.telegram
@@ -107,4 +196,4 @@ const checkIfLiquidation = (txDetails: hl.TxDetailsResponse): boolean => {
   return false;
 };
 
-export { processTrade };
+export { processTrade, getPositionContext, getMarketContext };
