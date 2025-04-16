@@ -6,15 +6,15 @@ This bot monitors Hyperliquid trades and sends notifications to a Telegram chann
 
 Before you begin, make sure you have the following installed:
 - [Node.js](https://nodejs.org/) (version 22.4.0 or higher)
-- [npm](https://www.npmjs.com/) (comes with Node.js)
+- [npm](https://www.npmjs.com/) (comes with Node.js) - pnpm can be used as well
 - [Git](https://git-scm.com/) (for cloning the repository)
 
 ## Step-by-Step Setup Guide
 
-### 1. Clone the Repository
+### 1. Clone the Repository trough your terminal
 ```bash
-git clone https://github.com/your-username/hl-liquidations.git
-cd hl-liquidations
+git clone https://github.com/rokitgg/hyperliquid-trades-feed
+cd hyperliquid-trades-feed
 ```
 
 ### 2. Create Your Telegram Bot
@@ -33,7 +33,7 @@ cd hl-liquidations
 ### 4. Set Up Environment Variables
 1. Create a file named `.env` in the project root directory
 2. Copy the contents from `.env.example` into `.env`
-3. Fill in your Telegram bot token and chat ID
+3. Fill in your Telegram bot token and chat ID and replace the values in your own `.env` file
 
 ### 5. Install Dependencies
 ```bash
@@ -64,8 +64,8 @@ You can customize the bot by modifying the following in `src/config/index.ts`:
 ## Features
 
 - Real-time trade monitoring on Hyperliquid
-- Automatic notifications for large trades and liquidations
-- Support for multiple cryptocurrencies
+- Automatic notifications for large trades.
+- Support for multiple cryptocurrencies (can be extended)
 - Automatic reconnection on connection loss
 - Health check endpoint
 
