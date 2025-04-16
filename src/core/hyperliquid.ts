@@ -18,6 +18,7 @@ const client = new hl.PublicClient({ transport });
 
 // Add new interfaces for position context
 interface PositionContext {
+  positionSize: string;
   entryPrice: number;
   leverage: number;
   liquidationPrice: number;
@@ -52,6 +53,7 @@ const getPositionContext = async (
     const pos = position.position;
     return {
       entryPrice: parseFloat(pos.entryPx),
+      positionSize: `${pos.szi} ${coin}`,
       leverage: pos.leverage.type === "isolated" ? parseFloat(pos.leverage.value.toString()) : 0,
       liquidationPrice: parseFloat(pos.liquidationPx ?? "N/A"),
       unrealizedPnl: parseFloat(pos.unrealizedPnl),
@@ -154,7 +156,7 @@ const processTrade = async (
         //   msg += `\n Open Interest: $${marketContext.openInterest}`;
         // }
 
-        msg += `- 🔗 <a href="${txLink}">Explorer</a>`;
+        msg += ` - 🔗 <a href="${txLink}">Explorer</a>`;
 
         // Send message to Telegram using HTML parse mode
         await bot.telegram
