@@ -138,7 +138,7 @@ const processTrade = async (
         let msg = "";
 
         // Enhanced message with position and market context
-        msg = `${trade.side === "B" ? "🟢" : "🔴"}  ${side} #${coin} $${formattedNotional} at $${fixedPrice} - 🔗 <a href="${txLink}">Explorer</a> <a href="${traderLink}">Trader</a>`;
+        msg = `${trade.side === "B" ? "🟢" : "🔴"}  ${side} #${coin} $${formattedNotional} at $${fixedPrice} - <a href="${txLink}">Explorer</a> | <a href="${traderLink}">Trader</a>`;
       
 
         // Send message to Telegram using HTML parse mode
