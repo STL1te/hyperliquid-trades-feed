@@ -1,6 +1,6 @@
 # Hyperliquid Trades Feed Bot
 
-This bot monitors Hyperliquid trades and sends notifications to a Telegram channel when significant trades occur. It's particularly focused on tracking large trades and liquidations for specific cryptocurrencies.
+This bot monitors Hyperliquid trades and sends notifications to a Telegram channel when significant trades occur. These notifications trough telegram are useful to build a feed tracking relevant traders on Hyperliquid,.
 
 ## Prerequisites
 
