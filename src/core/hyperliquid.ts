@@ -147,11 +147,11 @@ const processTrade = async (
         if (isLiquidation) {
           msg = `${trade.side === "B" ? "🟢" : "🔴"} #${coin} Liquidated ${side} ${formattedNotional} at $${fixedPrice}`;
         } else {
-          msg = `${trade.side === "B" ? "🟢" : "🔴"} ${assetPosition ? assetPosition.position.leverage.value + "X" : "Close"}  ${side} #${coin} $${formattedNotional} at $${fixedPrice} - 🔗 <a href="${traderLink}">Explorer</a>`;
+          msg = `${trade.side === "B" ? "🟢" : "🔴"}  ${side} #${coin} $${formattedNotional} at $${fixedPrice} - 🔗 <a href="${traderLink}">Explorer</a>`;
         }
 
         if (assetPosition) {
-          msg += `\n Account Value: $${formatNotional(parseFloat(state.marginSummary.accountValue))} - Position Size: ${parseFloat(assetPosition?.position.szi).toFixed(2)} ${assetPosition?.position.coin} - <a href="${txLink}">Trader</a>`;
+          msg += `\n ${assetPosition.position.leverage.value + "X"} - Account Value: $${formatNotional(parseFloat(state.marginSummary.accountValue))} - Position Size: ${parseFloat(assetPosition?.position.szi).toFixed(2)} ${assetPosition?.position.coin} - <a href="${txLink}">Trader</a>`;
         } else {
           msg += `\n Account Value: $${formatNotional(parseFloat(state.marginSummary.accountValue))} - <a href="${txLink}">Trader</a>`;
         }
