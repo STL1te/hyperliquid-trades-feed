@@ -116,15 +116,9 @@ const processTrade = async (
 
         // Fetch transaction details
         const txDetails = await client.txDetails({ hash: trade.hash });
-
-        // Check if the transaction involves a liquidation
-        const isLiquidation = checkIfLiquidation(txDetails);
-
         const trader = txDetails.tx.user;
 
         // Get additional context
-        const positionContext = await getPositionContext(trader, trade.coin);
-        const marketContext = await getMarketContext(trade.coin);
         const state = await client.clearinghouseState({ user: trader });
         const assetPosition = state.assetPositions.find(
           (pos) => pos.type === "oneWay" && pos.position.coin === trade.coin
@@ -137,18 +131,15 @@ const processTrade = async (
         const side = trade.side === "B" ? "Long" : "Short";
         const fixedPrice = price.toFixed(2);
 
-        // Create transaction explorer link
+        // Create embeddable links
         const txLink = `https://app.hyperliquid.xyz/explorer/tx/${trade.hash}`;
         const traderLink = `https://hyperdash.info/trader/${trader}`;
 
         let msg = "";
 
         // Enhanced message with position and market context
-        if (isLiquidation) {
-          msg = `${trade.side === "B" ? "🟢" : "🔴"} #${coin} Liquidated ${side} ${formattedNotional} at $${fixedPrice}`;
-        } else {
-          msg = `${trade.side === "B" ? "🟢" : "🔴"}  ${side} #${coin} $${formattedNotional} at $${fixedPrice} - 🔗 <a href="${txLink}">Explorer</a>`;
-        }
+        msg = `${trade.side === "B" ? "🟢" : "🔴"}  ${side} #${coin} $${formattedNotional} at $${fixedPrice} - 🔗 <a href="${txLink}">Explorer</a>`;
+      
 
         if (assetPosition) {
           msg += `\n Account Value: $${formatNotional(parseFloat(state.marginSummary.accountValue))} - Position Size: ${parseFloat(assetPosition?.position.szi).toFixed(2)} ${assetPosition?.position.coin} - uPnL: ${parseFloat(assetPosition.position.unrealizedPnl).toFixed(0)} USD - <a href="${txLink}">Trader</a>`;
