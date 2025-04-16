@@ -18,9 +18,10 @@ const client = new hl.PublicClient({ transport });
 
 // Add new interfaces for position context
 interface PositionContext {
+  accountValue: number;
   positionSize: string;
   entryPrice: number;
-  leverage: number;
+  leverage: string;
   liquidationPrice: number;
   unrealizedPnl: number;
   positionValue: number;
@@ -42,7 +43,6 @@ const getPositionContext = async (
 ): Promise<PositionContext | null> => {
   try {
     const state = await client.clearinghouseState({ user: address });
-    console.log(state);
     // Find position for the given coin
     const position = state.assetPositions.find(
       (pos) => pos.type === "oneWay" && pos.position.coin === coin
@@ -52,9 +52,10 @@ const getPositionContext = async (
 
     const pos = position.position;
     return {
+      accountValue: parseFloat(state.marginSummary.accountValue),
       entryPrice: parseFloat(pos.entryPx),
       positionSize: `${pos.szi} ${coin}`,
-      leverage: pos.leverage.type === "isolated" ? parseFloat(pos.leverage.value.toString()) : 0,
+      leverage: `${pos.leverage.value}x (${pos.leverage.type})`,
       liquidationPrice: parseFloat(pos.liquidationPx ?? "N/A"),
       unrealizedPnl: parseFloat(pos.unrealizedPnl),
       positionValue: parseFloat(pos.positionValue),
@@ -119,9 +120,15 @@ const processTrade = async (
         // Check if the transaction involves a liquidation
         const isLiquidation = checkIfLiquidation(txDetails);
 
+        const trader = txDetails.tx.user;
+
         // Get additional context
-        const positionContext = await getPositionContext(trade.users[0], trade.coin);
+        const positionContext = await getPositionContext(trader, trade.coin);
         const marketContext = await getMarketContext(trade.coin);
+        const state = await client.clearinghouseState({ user: trader });
+        const assetPosition = state.assetPositions.find(
+          (pos) => pos.type === "oneWay" && pos.position.coin === trade.coin
+        );
 
         // Format notional value with our new helper function
         const formattedNotional = formatNotional(notionalValue);
@@ -142,19 +149,14 @@ const processTrade = async (
           msg = `${trade.side === "B" ? "🟢" : "🔴"} ${side} #${coin} $${formattedNotional} at $${fixedPrice}`;
         }
 
-        // Add position context if available
-        // if (positionContext) {
-        //   const pnlEmoji = positionContext.unrealizedPnl >= 0 ? "📈" : "📉";
-        //   msg += `\n💰 Position: Entry $${positionContext.entryPrice.toFixed(2)} | Liq. $${positionContext.liquidationPrice.toFixed(2)}`;
-        //   msg += `\n${pnlEmoji} PnL: $${positionContext.unrealizedPnl.toFixed(2)} (${(positionContext.returnOnEquity * 100).toFixed(2)}% ROE)`;
-        // }
-
-        // // Add market context if available
-        // if (marketContext) {
-        //   msg += `\n📊 24h Volume: $${marketContext.dayVolume}`;
-        //   msg += `\n Annualized Funding Rate: ${(marketContext.funding * 100 * 365 * 3).toFixed(2)}%`;
-        //   msg += `\n Open Interest: $${marketContext.openInterest}`;
-        // }
+        // Only add position context if there's an active position
+        if (positionContext && positionContext.positionSize !== `0 ${coin}`) {
+          msg += `\n Account Value: $${state.marginSummary.accountValue}`;
+          msg += `\n Position Size: ${assetPosition?.position.szi} ${assetPosition?.position.coin}`;
+          msg += `\n Leverage: ${assetPosition?.position.leverage.value}x (${assetPosition?.position.leverage.type})`;
+          msg += `\n Liquidation Price: $${assetPosition?.position.liquidationPx}`;
+          msg += `\n Unrealized PnL: $${assetPosition?.position.unrealizedPnl} (${(parseFloat(assetPosition?.position.returnOnEquity ?? "0") * 100).toFixed(2)}% ROE)`;
+        }
 
         msg += ` - 🔗 <a href="${txLink}">Explorer</a>`;
 
