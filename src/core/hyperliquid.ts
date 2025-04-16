@@ -138,14 +138,8 @@ const processTrade = async (
         let msg = "";
 
         // Enhanced message with position and market context
-        msg = `${trade.side === "B" ? "🟢" : "🔴"}  ${side} #${coin} $${formattedNotional} at $${fixedPrice} - 🔗 <a href="${txLink}">Explorer</a>`;
+        msg = `${trade.side === "B" ? "🟢" : "🔴"}  ${side} #${coin} $${formattedNotional} at $${fixedPrice} - 🔗 <a href="${txLink}">Explorer</a> <a href="${traderLink}">Trader</a>`;
       
-
-        if (assetPosition) {
-          msg += `\n Account Value: $${formatNotional(parseFloat(state.marginSummary.accountValue))} - Position Size: ${parseFloat(assetPosition?.position.szi).toFixed(2)} ${assetPosition?.position.coin} - uPnL: ${parseFloat(assetPosition.position.unrealizedPnl).toFixed(0)} USD - <a href="${traderLink}">Trader</a>`;
-        } else {
-          msg += `\n Account Value: $${formatNotional(parseFloat(state.marginSummary.accountValue))} - <a href="${traderLink}">Trader</a>`;
-        }
 
         // Send message to Telegram using HTML parse mode
         await bot.telegram
