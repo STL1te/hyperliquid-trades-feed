@@ -152,7 +152,7 @@ const processTrade = async (
         // Only add position context if there's an active position
         if (assetPosition) {
           msg += `\n Account Value: $${formatNotional(parseFloat(state.marginSummary.accountValue))}`;
-          msg += `\n Position Size: ${assetPosition?.position.szi} ${assetPosition?.position.coin}`;
+          msg += `\n Position Size: ${parseFloat(assetPosition?.position.szi).toFixed(2)} ${assetPosition?.position.coin}`;
           msg += `\n Leverage: ${assetPosition?.position.leverage.value}x (${assetPosition?.position.leverage.type})`;
           msg += `\n Liquidation Price: $${assetPosition?.position.liquidationPx ?? "N/A"}`;
           msg += `\n Unrealized PnL: $${assetPosition?.position.unrealizedPnl} (${(parseFloat(assetPosition?.position.returnOnEquity ?? "0") * 100).toFixed(2)}% ROE)`;
