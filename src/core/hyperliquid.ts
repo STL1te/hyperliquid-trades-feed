@@ -142,7 +142,7 @@ const processTrade = async (
       
 
         if (assetPosition) {
-          msg += `\n Account Value: $${formatNotional(parseFloat(state.marginSummary.accountValue))} - Position Size: ${parseFloat(assetPosition?.position.szi).toFixed(2)} ${assetPosition?.position.coin} - uPnL: ${parseFloat(assetPosition.position.unrealizedPnl).toFixed(0)} USD - <a href="${txLink}">Trader</a>`;
+          msg += `\n Account Value: $${formatNotional(parseFloat(state.marginSummary.accountValue))} - Position Size: ${parseFloat(assetPosition?.position.szi).toFixed(2)} ${assetPosition?.position.coin} - uPnL: ${parseFloat(assetPosition.position.unrealizedPnl).toFixed(0)} USD - <a href="${traderLink}">Trader</a>`;
         } else {
           msg += `\n Account Value: $${formatNotional(parseFloat(state.marginSummary.accountValue))} - <a href="${traderLink}">Trader</a>`;
         }
