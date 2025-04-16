@@ -2,8 +2,7 @@ import * as hl from "@nktkas/hyperliquid";
 
 import { bot } from "./bot";
 import { CHAT_ID } from "../config";
-import { limiter, MAX_RETRIES, RETRY_DELAY_MS, API_DELAY_MS } from "../utils";
-import { formatNotional } from "../utils/format";
+import { limiter, MAX_RETRIES, RETRY_DELAY_MS, API_DELAY_MS, formatNotional } from "../utils";
 
 export interface LiquidateAction {
   type: "liquidate" | string;
@@ -93,6 +92,7 @@ const processTrade = async (
   });
 };
 
+// (WARNING: unstable)
 // Check if a given Hyperliquid TX transaction involves a liquidation
 const checkIfLiquidation = (txDetails: hl.TxDetailsResponse): boolean => {
   // Access the action object from the transaction details safely

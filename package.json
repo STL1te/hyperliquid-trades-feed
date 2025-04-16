@@ -1,7 +1,7 @@
 {
-  "name": "hl-liquidations",
+  "name": "hyperliquid-trades-feed",
   "version": "1.0.1",
-  "description": "Hyperliquid Trades Feed via Telegram Bot",
+  "description": "Get notified when big trades happen on Hyperliquid. Not affiliated with Hyperliquid",
   "main": "dist/index.js",
   "type": "commonjs",
   "include": [

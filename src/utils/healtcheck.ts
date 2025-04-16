@@ -1,7 +1,10 @@
 import http from "http";
 
-// Healthcheck helper that sets up a healthcheck endpoint
-export const healthcheck = () => {
+/**
+ * Healthcheck helper that sets up a healthcheck endpoint
+ * @returns {http.Server} The HTTP server instance
+ */
+export const healthcheck = (): http.Server => {
   // Create a simple HTTP server for health check
   const server = http.createServer((req, res) => {
     // Set CORS headers for broader access

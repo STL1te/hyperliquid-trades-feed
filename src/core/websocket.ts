@@ -1,5 +1,5 @@
-import WebSocket from "ws";
 import * as hl from "@nktkas/hyperliquid";
+import WebSocket from "ws";
 import { SUPPORTED_COINS, MIN_NOTIONAL_VALUE } from "../config";
 import { processTrade } from "./hyperliquid";
 
@@ -19,7 +19,7 @@ export const websocket = () => {
   return ws;
 };
 
-// Handle connection opening
+// Handle WebSocket connection opening
 const setupOpenHandler = () => {
   ws.on("open", async () => {
     console.log("Connected to Hyperliquid WebSocket");
@@ -43,7 +43,7 @@ const setupOpenHandler = () => {
   });
 };
 
-// Handle incoming messages
+// Handle incoming WebSocket messages
 const setupMessageHandler = () => {
   ws.on("message", async (data) => {
     try {
@@ -79,14 +79,14 @@ const setupMessageHandler = () => {
   });
 };
 
-// Handle errors
+// Handle WebSocket errors
 const setupErrorHandler = () => {
   ws.on("error", (error) => {
     throw new Error(`WebSocket error: ${error}`);
   });
 };
 
-// Handle connection closing with reconnection logic
+// Handle WebSocket connection closing with reconnection logic
 const setupCloseHandler = () => {
   ws.on("close", () => {
     // Reconnection logic with exponential backoff
