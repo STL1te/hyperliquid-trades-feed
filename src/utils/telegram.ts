@@ -1,8 +1,8 @@
-import { Telegraf } from "telegraf";
-import { Context } from "telegraf";
-import { Update } from "telegraf/types";
+import {Telegraf} from "telegraf";
+import {Context} from "telegraf";
+import {Update} from "telegraf/types";
 
-import { CHAT_ID } from "../config";
+import {CHAT_ID} from "../config";
 
 /**
  * Send a message to the Telegram channel
@@ -11,12 +11,12 @@ import { CHAT_ID } from "../config";
  * @returns {Promise<void>}
  */
 export const sendTelegramMessage = async (
-  msg: string,
-  bot: Telegraf<Context<Update>>
+    msg: string,
+    bot: Telegraf<Context<Update>>
 ): Promise<void> => {
-  try {
-    await bot.telegram.sendMessage(CHAT_ID!, msg);
-  } catch (error) {
-    throw new Error(`Error sending Telegram message: ${error}`);
-  }
+    try {
+        await bot.telegram.sendMessage(CHAT_ID!, msg);
+    } catch (error) {
+        throw new Error(`Error sending Telegram message: ${error}`);
+    }
 };

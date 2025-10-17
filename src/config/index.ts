@@ -14,4 +14,4 @@ const SUPPORTED_COINS: string[] = process.env.SUPPORTED_COINS?.split(" ") || FAL
 
 if (!BOT_TOKEN || !CHAT_ID) throw new Error("Missing required variables.");
 
-export { BOT_TOKEN, CHAT_ID, SUPPORTED_COINS, MIN_NOTIONAL_VALUE };
+export {BOT_TOKEN, CHAT_ID, SUPPORTED_COINS, MIN_NOTIONAL_VALUE};
