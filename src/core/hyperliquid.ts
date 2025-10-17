@@ -134,11 +134,12 @@ const processTrade = async (
         // Create embeddable links
         const txLink = `https://app.hyperliquid.xyz/explorer/tx/${trade.hash}`;
         const traderLink = `https://hyperdash.info/trader/${trader}`;
+        const hypurrscanLink = `https://hypurrscan.io/address/${trader}`;
 
         let msg = "";
 
         // Enhanced message with position and market context
-        msg = `${trade.side === "B" ? "🟢" : "🔴"}  ${side} #${coin} $${formattedNotional} at $${fixedPrice} - <a href="${txLink}">Explorer</a> | <a href="${traderLink}">Trader</a>`;
+        msg = `${trade.side === "B" ? "🟢" : "🔴"}  ${side} #${coin} $${formattedNotional} at $${fixedPrice} <br><a href="${txLink}">Explorer</a> | <a href="${traderLink}">HyperDash</a> | <a href="${hypurrscanLink}">HypurrScan</a>`;
       
 
         // Send message to Telegram using HTML parse mode
