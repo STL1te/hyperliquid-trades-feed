@@ -146,7 +146,9 @@ const processTrade = async (
                 await bot.telegram
                     .sendMessage(CHAT_ID!, msg, {parse_mode: "HTML"})
                     .catch((error) => {
-                        throw new Error(`Something went wrong: ${error}`);
+                        const errorMsg = `Something went wrong: ${error}`;
+                        console.log(errorMsg)
+                        throw new Error(errorMsg);
                     });
 
                 success = true;
